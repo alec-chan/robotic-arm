@@ -3,18 +3,17 @@
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 import xbox
-# ===========================================================================
-# Example Code
-# ===========================================================================
+
 
 # Initialise the PWM device using the default address
 pwm = PWM(0x40, debug=True)
 joy = xbox.Joystick()
-# Note if you'd like more debug output you can instead run:
-#pwm = PWM(0x40, debug=True)
 
-servoMin = 150  # Min pulse length out of 4096
-servoMax = 600  # Max pulse length out of 4096
+
+servoClockwise = 0.0020
+servoCounterCW = 0.0010
+servoStop      = 0.0015
+
 
 def setServoPulse(channel, pulse):
   pulseLength = 1000000                   # 1,000,000 us per second
@@ -28,17 +27,17 @@ def setServoPulse(channel, pulse):
 
 
 pwm.setPWMFreq(60)                        # Set frequency to 60 Hz
-i = servoMin
-multiplier = 2
+
+
 while (True):
   # Change speed of continuous servo on channel O
   if joy.A():
-    i=i+(1*multiplier)
-    if i>servoMax or i<servoMin :
-      multiplier*=-1
-    else:
-      pwm.setPWM(0, 0, i)
-    
+    setServoPulse(0,servoClockwise)
+  elif joy.B():
+    serServoPulse(0,servoCounterCW)
+  elif joy.X():
+    setServoPulse(0,servoStop)
+    break    
   
 
 
